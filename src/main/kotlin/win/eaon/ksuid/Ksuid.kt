@@ -17,6 +17,42 @@ class Ksuid {
     private val PAYLOAD_LENGTH = 16
     private val MAX_ENCODED_LENGTH = 27
 
+    companion object {
+        /**
+         * Generate a new KSUID.
+         *
+         * @return New KSUID string.
+         */
+        @JvmStatic fun generateUid():String{
+            return Ksuid().generate()
+        }
+
+        /**
+         * Parse a KSUID string to show information.
+         *
+         * @param ksuid KSUID string
+         * @return KSUID detail.
+         */
+        @JvmStatic fun parseUid(ksuid: String): String {
+            return Ksuid().parse(ksuid)
+        }
+
+        /**
+         * Get the timestamp of the KSUID string.
+         *
+         * @param ksuid KSUID string
+         * @return timestamp in millisecond.
+         */
+        @JvmStatic fun getTimestampFromUid(ksuid: String): Long {
+            return Ksuid().getTimestamp(ksuid)
+        }
+    }
+
+    /**
+     * Generate a new KSUID.
+     *
+     * @return New KSUID string.
+     */
     fun generate(): String {
         val random = SecureRandom()
         val timestamp = generateTimestamp()
@@ -37,6 +73,12 @@ class Ksuid {
         return uid
     }
 
+    /**
+     * Parse a KSUID string to show information.
+     *
+     * @param ksuid KSUID string
+     * @return KSUID detail.
+     */
     fun parse(ksuid: String): String {
         val bytes = Base62().decode(ksuid)
 
@@ -47,6 +89,12 @@ class Ksuid {
         return String.format("Time: %s\nTimestamp: %d\nPayload: %s", utcTimeString, timestamp * 1000, payload)
     }
 
+    /**
+     * Get the timestamp of the KSUID string.
+     *
+     * @param ksuid KSUID string
+     * @return timestamp in millisecond.
+     */
     fun getTimestamp(ksuid: String): Long {
         val bytes = Base62().decode(ksuid)
         return decodeTimestamp(bytes) * 1000

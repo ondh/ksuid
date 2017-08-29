@@ -25,5 +25,6 @@ long timestamp = Ksuid.getTimestampFromUid(uid);
 [Base62 encode/decode by glowfall](https://github.com/glowfall/base62)
 
 # Update Log
+- 1.0.2: update kotlin version
 - 1.0.1: Add static methods for Java
 - 1.0.0: Initial public release

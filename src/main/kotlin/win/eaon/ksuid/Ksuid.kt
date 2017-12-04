@@ -28,6 +28,16 @@ class Ksuid {
         }
 
         /**
+         * Generate a new KSUID from date.
+         *
+         * @param date date for timestamp
+         * @return New KSUID string.
+         */
+        @JvmStatic fun generateUid(date: Date):String{
+            return Ksuid().generate(date)
+        }
+
+        /**
          * Parse a KSUID string to show information.
          *
          * @param ksuid KSUID string
@@ -54,8 +64,23 @@ class Ksuid {
      * @return New KSUID string.
      */
     fun generate(): String {
-        val random = SecureRandom()
         val timestamp = generateTimestamp()
+        return generate(timestamp)
+    }
+
+    /**
+     * Generate a new KSUID from date.
+     *
+     * @param date date for timestamp
+     * @return New KSUID string.
+     */
+    fun generate(date: Date): String {
+        val timestamp = generateTimestamp(date)
+        return generate(timestamp)
+    }
+
+    private fun generate(timestamp:ByteArray): String {
+        val random = SecureRandom()
         val payload = generatePayload(random)
 
         val output = ByteArrayOutputStream()
@@ -102,6 +127,12 @@ class Ksuid {
 
     private fun generateTimestamp(): ByteArray {
         val utc = ZonedDateTime.now(ZoneOffset.UTC).toInstant().toEpochMilli() / 1000
+        val timestamp = (utc - EPOCH).toInt()
+        return ByteBuffer.allocate(TIMESTAMP_LENGTH).putInt(timestamp).array()
+    }
+
+    private fun generateTimestamp(date: Date): ByteArray {
+        val utc = date.toInstant().toEpochMilli() / 1000
         val timestamp = (utc - EPOCH).toInt()
         return ByteBuffer.allocate(TIMESTAMP_LENGTH).putInt(timestamp).array()
     }
